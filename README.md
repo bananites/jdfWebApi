@@ -42,6 +42,12 @@ dotnet ef database update
 ## Documentation of dotnet ef core tools
 <https://learn.microsoft.com/en-us/ef/core/cli/dotnet>
 
+```bash
+#run migrations
+dotnet ef migrations add MyFirstMigration
+
+```
+
 ## Dotnet documentation API
 
 ```bash
@@ -59,5 +65,7 @@ dotnet tool install dotnet-aspnet-codegenerator
 ### Aspnet-Codegenerator
 
 ```bash
-dotnet aspnet-codegenerator controller -name TodoItemsController -async -api -m TodoItem -dc TodoContext -outDir Controllers
+# generate Controller
 dotnet aspnet-codegenerator controller -name UserController -async -api -m User -dc Ts31JdfMachineHandlerContext -outDir Controllers
+
+```
