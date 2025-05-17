@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace DataPollingApi.Models;
+﻿namespace DataPollingApi.Models;
 
 public partial class User
 {
