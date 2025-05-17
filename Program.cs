@@ -4,11 +4,7 @@ using Microsoft.EntityFrameworkCore;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddControllers()
-.AddJsonOptions(options =>
-{
-    options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.Preserve;
-});
+builder.Services.AddControllers();
 
 builder.Services.AddDbContext<S31JdfMachineHandlerContext>(options =>
     options.UseMySql(builder.Configuration.GetConnectionString("mysqldb"), ServerVersion.Parse("10.6.21-mariadb")));
