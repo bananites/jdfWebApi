@@ -3,14 +3,13 @@ using System.Collections.Generic;
 
 namespace DataPollingApi.Models;
 
-// TODO define a name for the Job
+// TODO define a name for the Job and Status
 public partial class Job
 {
     public int Id { get; set; }
-
     public string? XmlPath { get; set; }
-
+    public string? status { get; set; }
+    public string? name { get; set; }
     public virtual ICollection<MachineJob> MachineJobs { get; set; } = new List<MachineJob>();
-
     public virtual ICollection<UserJob> UserJobs { get; set; } = new List<UserJob>();
 }
