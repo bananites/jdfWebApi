@@ -3,6 +3,7 @@ using System.Collections.Generic;
 
 namespace DataPollingApi.Models;
 
+// TODO define a name for the Job
 public partial class Job
 {
     public int Id { get; set; }
