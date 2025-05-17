@@ -1,12 +1,8 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using DataPollingApi.Models;
 
+// TODO Maybe I want to have different routes for User and User with Jobs
 namespace DataPollingApi.Controllers
 {
     [Route("api/[controller]")]
@@ -22,23 +18,63 @@ namespace DataPollingApi.Controllers
 
         // GET: api/User
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<User>>> GetUsers()
+        public ActionResult<IEnumerable<UserDTO>> GetUsers()
         {
-            return await _context.Users.ToListAsync();
+            var users = _context.Users
+            .Include(u => u.UserJobs)
+            .ThenInclude(uj => uj.Job)
+            .Select(u => new UserDTO
+            {
+                Id = u.Id,
+                Username = u.Username,
+                UserJobs = u.UserJobs
+                .Where(uj => uj.Job != null)
+                .Select(uj => new JobDTO
+                {
+                    Id = uj.Job.Id,
+                    Name = uj.Job.Name,
+                    Status = uj.Job.Status,
+                    XmlPath = uj.Job.XmlPath,
+
+                }).ToList()
+            })
+            .ToList();
+            return users;
         }
 
         // GET: api/User/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<User>> GetUser(int id)
+        public ActionResult<UserDTO> GetUser(int id)
         {
-            var user = await _context.Users.FindAsync(id);
+            var user = _context.Users
+            .Include(u => u.UserJobs)
+            .ThenInclude(uj => uj.Job)
+            .FirstOrDefault(u => u.Id == id);
 
             if (user == null)
             {
                 return NotFound();
             }
 
-            return user;
+            var map = new UserDTO
+            {
+                Id = user.Id,
+                Username = user.Username,
+                UserJobs = user.UserJobs
+                .Where(uj => uj.Job != null)
+                .Select(uj => new JobDTO
+                {
+                    Id = uj.Job.Id,
+                    Name = uj.Job.Name,
+                    Status = uj.Job.Status,
+                    XmlPath = uj.Job.XmlPath,
+
+                }).ToList()
+
+
+            };
+
+            return map;
         }
 
         // PUT: api/User/5
