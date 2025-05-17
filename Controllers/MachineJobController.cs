@@ -1,8 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using DataPollingApi.Models;
@@ -22,16 +17,41 @@ namespace DataPollingApi.Controllers
 
         // GET: api/MachineJob
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<MachineJob>>> GetMachineJobs()
+        public  ActionResult<List<MachineJobDTO>> GetMachineJobs()
         {
-            return await _context.MachineJobs.ToListAsync();
+            var machineJobs =  _context.MachineJobs
+            .Include(mj => mj.Job)
+            .Select(mj => new MachineJobDTO
+            {
+                Id = mj.Id,
+                MachineId = mj.MachineId,
+                JobId = mj.JobId,
+                Job = mj.Job
+            })
+            .ToList();
+
+            if (machineJobs == null)
+            {
+                return NotFound();
+
+            }
+
+            return machineJobs;
         }
 
         // GET: api/MachineJob/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<MachineJob>> GetMachineJob(int id)
+        public ActionResult<List<JobDTO>> GetMachineJob(int id)
         {
-            var machineJob = await _context.MachineJobs.FindAsync(id);
+            var machineJob = _context.MachineJobs
+            .Where(mj => mj.MachineId == id)
+            .Include(mj => mj.Job)
+            .Select(mj => new JobDTO
+            {
+                Id = mj.Job.Id,
+                XmlPath = mj.Job.XmlPath,
+            })
+            .ToList();
 
             if (machineJob == null)
             {

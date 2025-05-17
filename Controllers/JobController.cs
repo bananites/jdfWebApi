@@ -1,8 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using DataPollingApi.Models;
@@ -22,23 +17,38 @@ namespace DataPollingApi.Controllers
 
         // GET: api/Job
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Job>>> GetJobs()
+        public ActionResult<IEnumerable<JobDTO>> GetJobs()
         {
-            return await _context.Jobs.ToListAsync();
+            var jobs = _context.Jobs
+            .Select(j => new JobDTO
+            {
+                Id = j.Id,
+                XmlPath = j.XmlPath
+            })
+            .ToList();
+
+
+            return jobs;
         }
 
         // GET: api/Job/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Job>> GetJob(int id)
+        public  ActionResult<JobDTO> GetJob(int id)
         {
-            var job = await _context.Jobs.FindAsync(id);
+            var job = _context.Jobs.Find(id);
 
             if (job == null)
             {
                 return NotFound();
             }
 
-            return job;
+            var map = new JobDTO
+            {
+                Id = job.Id,
+                XmlPath = job.XmlPath
+            };
+
+            return map;
         }
 
         // PUT: api/Job/5
