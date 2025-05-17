@@ -27,26 +27,21 @@ dotnet ef dbcontext scaffold "server=server;user=user;password=pwd;database=db" 
 
 ## dotnet ef commands
 
-1. Run migration, in this case DbInit
-
 ```bash
+# Run migration, in this case DbInit
 dotnet ef migrations add DbInit
-```
 
-2. To update the Database
-
-```bash
+# To update the Database
 dotnet ef database update
+
+#drop database
+dotnet ef database drop
+
 ```
 
-## Documentation of dotnet ef core tools
+### Documentation of dotnet ef core tools
+
 <https://learn.microsoft.com/en-us/ef/core/cli/dotnet>
-
-```bash
-#run migrations
-dotnet ef migrations add MyFirstMigration
-
-```
 
 ## Dotnet documentation API
 
