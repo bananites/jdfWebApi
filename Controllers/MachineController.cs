@@ -17,23 +17,38 @@ namespace DataPollingApi.Controllers
 
         // GET: api/Machine
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Machine>>> GetMachines()
+        public ActionResult<List<MachineDTO>> GetMachines()
         {
-            return await _context.Machines.ToListAsync();
+            var machines = _context.Machines
+            .Select(m => new MachineDTO
+            {
+                Id = m.Id,
+                Type = m.Type,
+                YearBuilt = m.YearBuilt
+            })
+            .ToList();
+            return machines;
         }
 
         // GET: api/Machine/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Machine>> GetMachine(int id)
+        public  ActionResult<MachineDTO> GetMachine(int id)
         {
-            var machine = await _context.Machines.FindAsync(id);
+            var machine =  _context.Machines.Find(id);
 
             if (machine == null)
             {
                 return NotFound();
             }
 
-            return machine;
+            var map = new MachineDTO
+            {
+                Id = machine.Id,
+                Type = machine.Type,
+                YearBuilt = machine.YearBuilt
+            };
+
+            return map;
         }
 
         // PUT: api/Machine/5
@@ -52,6 +67,7 @@ namespace DataPollingApi.Controllers
             {
                 await _context.SaveChangesAsync();
             }
+
             catch (DbUpdateConcurrencyException)
             {
                 if (!MachineExists(id))
