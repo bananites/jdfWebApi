@@ -40,6 +40,7 @@ public partial class S31JdfMachineHandlerContext : DbContext
 
             entity.ToTable("job");
 
+            
             entity.Property(e => e.Id)
                 .HasColumnType("int(11)")
                 .HasColumnName("id");
