@@ -1,3 +1,5 @@
+using DataPollingApi.Models;
+
 public class MachineDTO
 {
 
@@ -5,4 +7,5 @@ public class MachineDTO
     public string? Type { get; set; }
     public int? YearBuilt { get; set; }
 
+    public List<JobDTO>? MachineJobs { get; set; } 
 }
