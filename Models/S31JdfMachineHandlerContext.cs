@@ -1,16 +1,30 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.EntityFrameworkCore;
 
 namespace DataPollingApi.Models;
 
 public partial class S31JdfMachineHandlerContext : DbContext
 {
-    public S31JdfMachineHandlerContext()
+    private static S31JdfMachineHandlerContext instance = new S31JdfMachineHandlerContext();
+    private S31JdfMachineHandlerContext()
     {
     }
 
-    public S31JdfMachineHandlerContext(DbContextOptions<S31JdfMachineHandlerContext> options)
+    private S31JdfMachineHandlerContext(DbContextOptions<S31JdfMachineHandlerContext> options)
         : base(options)
     {
+    }
+
+    public static S31JdfMachineHandlerContext getInstance()
+    {
+        if (instance == null)
+        {
+            S31JdfMachineHandlerContext instance = new S31JdfMachineHandlerContext();
+            return instance;
+        }
+
+        return instance;
+
     }
 
     public virtual DbSet<Job> Jobs { get; set; }
