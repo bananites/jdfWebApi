@@ -1,4 +1,3 @@
-using DataPollingApi.Models;
 
 public class MachineDTO
 {
