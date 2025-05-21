@@ -4,7 +4,9 @@ namespace DataPollingApi.Models;
 
 public partial class S31JdfMachineHandlerContext : DbContext
 {
-    public S31JdfMachineHandlerContext()
+
+    private static S31JdfMachineHandlerContext instance = new S31JdfMachineHandlerContext();
+    private S31JdfMachineHandlerContext()
     {
     }
 
@@ -12,7 +14,17 @@ public partial class S31JdfMachineHandlerContext : DbContext
         : base(options)
     {
     }
+    public static S31JdfMachineHandlerContext getInstance()
+    {
+        if (instance == null)
+        {
+            S31JdfMachineHandlerContext instance = new S31JdfMachineHandlerContext();
+            return instance;
+        }
 
+        return instance;
+
+    }
     public virtual DbSet<Job> Jobs { get; set; }
 
     public virtual DbSet<Machine> Machines { get; set; }
@@ -23,10 +35,6 @@ public partial class S31JdfMachineHandlerContext : DbContext
 
     public virtual DbSet<UserJob> UserJobs { get; set; }
 
-//     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-// #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-//       => optionsBuilder.UseMySql("server=mainnode.fwsites.de;user=u31_dCwfbwFlMd;password=bmgUPWHnDuWvAA.oRVBSKaB4;database=s31_jdf_machine_handler", Microsoft.EntityFrameworkCore.ServerVersion.Parse("10.6.21-mariadb"));
-    //  => optionsBuilder.UseMySql(, Microsoft.EntityFrameworkCore.ServerVersion.Parse("10.6.21-mariadb"));
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
