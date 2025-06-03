@@ -1,3 +1,8 @@
+# JDF Web Api
+
+For this project you need to specify a appsettings.json.
+You can use the appsettings.Development.json an put your ConnectionString into the mysql Object. 
+
 ## Documentation
 
 1. Install new webapi project
@@ -18,8 +23,9 @@ dotnet add package Microsoft.EntityFrameworkCore.Design
 ```bash
 dotnet tool install --create-manifest-if-needed dotnet-ef
 ```
+4. Set Up Database with the Database.sql file
 
-4. Create the DbContext
+5. Create the DbContext
 
 ```bash
 dotnet ef dbcontext scaffold "server=server;user=user;password=pwd;database=db" Pomelo.EntityFrameWorkCore.Mysql -o Models
