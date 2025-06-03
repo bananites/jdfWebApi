@@ -15,27 +15,68 @@ namespace DataPollingApi.Controllers
             _context = context;
         }
 
-        // GET: api/Job
+        // GET: api/job
+        // DONE
         [HttpGet]
         public ActionResult<IEnumerable<JobDTO>> GetJobs()
         {
             var jobs = _context.Jobs
+            .Include(j => j.UserJobs)
+            .ThenInclude(uj => uj.User)
+            .Include(j => j.MachineJobs)
+            .ThenInclude(mj => mj.Machine)
             .Select(j => new JobDTO
             {
                 Id = j.Id,
-                XmlPath = j.XmlPath
+                Name = j.Name,
+                XmlPath = j.XmlPath,
+                Status = j.Status,
+
+                MachineId = j.MachineJobs
+                .Select(mj => mj.MachineId)
+                .FirstOrDefault(),
+
+                Users = j.UserJobs
+                .Select(uj => new UserDTO
+                {
+                    Id = uj.User.Id,
+                    Username = uj.User.Username
+                }).ToList()
+
             })
             .ToList();
-
 
             return jobs;
         }
 
         // GET: api/Job/5
         [HttpGet("{id}")]
-        public  ActionResult<JobDTO> GetJob(int id)
+        public ActionResult<JobDTO> GetJob(int id)
         {
-            var job = _context.Jobs.Find(id);
+            var job = _context.Jobs
+            .Include(j => j.UserJobs)
+            .ThenInclude(uj => uj.User)
+            .Include(j => j.MachineJobs)
+            .ThenInclude(mj => mj.Machine)
+            .Select(j => new JobDTO
+            {
+                Id = j.Id,
+                Name = j.Name,
+                XmlPath = j.XmlPath,
+                Status = j.Status,
+
+                MachineId = j.MachineJobs
+                .Select(mj => mj.MachineId)
+                .FirstOrDefault(),
+
+                Users = j.UserJobs
+                .Select(uj => new UserDTO
+                {
+                    Id = uj.User.Id,
+                    Username = uj.User.Username
+                }).ToList()
+            })
+            .FirstOrDefault(j => j.Id == 5);
 
             if (job == null)
             {
@@ -46,9 +87,10 @@ namespace DataPollingApi.Controllers
             {
                 Id = job.Id,
                 XmlPath = job.XmlPath
+
             };
 
-            return map;
+            return job;
         }
 
         // PUT: api/Job/5
