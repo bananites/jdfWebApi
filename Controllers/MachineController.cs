@@ -81,7 +81,7 @@ namespace DataPollingApi.Controllers
         // PUT: api/Machine/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutMachine(int id, Machine machine)
+        public async Task<IActionResult> PutMachine(int id, MachineDTO machine)
         {
             if (id != machine.Id)
             {
@@ -113,8 +113,21 @@ namespace DataPollingApi.Controllers
         // POST: api/Machine
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Machine>> PostMachine(Machine machine)
+        public async Task<ActionResult<Machine>> PostMachine(MachineDTO machineDTO)
         {
+
+            if (machineDTO == null)
+            {
+                return 
+            }
+
+            Machine machine = new Machine();
+
+            machine.MachineJobs = (ICollection<MachineJob>)machineDTO.MachineJobs;
+            machine.Type = machineDTO.Type;
+            machine.YearBuilt = machineDTO.YearBuilt;
+
+
             _context.Machines.Add(machine);
             await _context.SaveChangesAsync();
 
