@@ -1,6 +1,9 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using DataPollingApi.Models;
+using System.Security.Cryptography.X509Certificates;
+using Microsoft.AspNetCore.Cryptography.KeyDerivation;
+using System.Text;
 
 // TODO Maybe I want to have different routes for User and User with Jobs
 namespace DataPollingApi.Controllers
@@ -108,11 +111,18 @@ namespace DataPollingApi.Controllers
             return NoContent();
         }
 
+
         // POST: api/User
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
         public async Task<ActionResult<User>> PostUser(User user)
         {
+
+            if (user == null || user.Username == null || user.Password == null)
+            {
+                return BadRequest("User was not created");
+            }
+            user.Password = HashPasswort(user.Username, user.Password);
             _context.Users.Add(user);
             await _context.SaveChangesAsync();
 
@@ -138,6 +148,21 @@ namespace DataPollingApi.Controllers
         private bool UserExists(int id)
         {
             return _context.Users.Any(e => e.Id == id);
+        }
+
+        private string HashPasswort(string salt, string pwd)
+        {
+
+            string hashed = Convert.ToBase64String(KeyDerivation.Pbkdf2(
+                password: pwd,
+                salt: Encoding.UTF8.GetBytes(salt),
+                prf: KeyDerivationPrf.HMACSHA256,
+                iterationCount: 100000,
+                numBytesRequested: 256 /8
+            ));
+
+            return hashed;
+
         }
     }
 }
